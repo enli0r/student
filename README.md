@@ -5,14 +5,14 @@ Koraci:
 
 
 3. DataAccessLayer 
-    3.1 Napraviti folder models i u njemu kreirati Student.cs
-    3.2 napraviti klasu Contents.cs i u njega staviti connection string
-    3.3 napraviti klasu StudentRepostiory i u njemu kreirati funkcije za kreiranje i vracanje podataka studenta
+3.1 Napraviti folder models i u njemu kreirati Student.cs
+3.2 napraviti klasu Contents.cs i u njega staviti connection string
+3.3 napraviti klasu StudentRepostiory i u njemu kreirati funkcije za kreiranje i vracanje podataka studenta
 
 4. BussinessLayer
-    4.1 Napraviti klasu StudentBusiness
-    4.2 u StudentBusiness napraviti polje:  (napraviti referencu ka DataAccessLayer)
-    4.3 Napraviti konstruktor i inicijalizovati studentRepository
+4.1 Napraviti klasu StudentBusiness
+4.2 u StudentBusiness napraviti polje:  (napraviti referencu ka DataAccessLayer)
+4.3 Napraviti konstruktor i inicijalizovati studentRepository
 
 
 //Data access layer 
