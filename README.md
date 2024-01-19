@@ -1,35 +1,44 @@
-Steps i took:
+Koraci:
+1. napraviti PresentationLayer - web forms
+2. napraviti BusinessLayeer - classlibrary
+3. napraviti DataAccessLayer - classlibrary
 
-make PresentationLayer - forms
-make BusinessLayeer - classlibrary
-make DataAccessLayer - classlibrary
-DataAccessLayer 3.1 make folder models and create Student.cs in it 3.2 make class Contents.cs and create connection string 3.3 make class StudentRepostiory and create methods for Inserting and GettingStudents
 
-BussinessLayer 4.1 make class StudentBusiness 4.2 create field in it: (referenting DataAccessLayer) 4.3 make constructor and intialize studentRepository
+3. DataAccessLayer 
+    3.1 Napraviti folder models i u njemu kreirati Student.cs
+    3.2 napraviti klasu Contents.cs i u njega staviti connection string
+    3.3 napraviti klasu StudentRepostiory i u njemu kreirati funkcije za kreiranje i vracanje podataka studenta
 
-Data access layer
+4. BussinessLayer
+    4.1 Napraviti klasu StudentBusiness
+    4.2 u StudentBusiness napraviti polje:  (napraviti referencu ka DataAccessLayer)
+    4.3 Napraviti konstruktor i inicijalizovati studentRepository
 
-public class Contacts
-{
-    public static string connectionString = "Data source =.....";
-}
 
-public class StudentRepostiory
-{
+//Data access layer 
+
+    public class Contacts
+    {
+        public static string connectionString = "Data source =.....";
+    }
+
+
+    public class StudentRepostiory
+    {
     public List<Student> GetAllStudents()
     {
         List<Student> results = List<Student>();
-
-        using (SqlConnection sqlConnection = new SqlConnection(Contacts.connectionString))
+    
+        using (SqlConnection SqlConnection = new SqlConnection(Contacts.conneectionString))
         {
             SqlCommand.sqlCommand = new SqlCommand();
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandText = "SELECT * FROM STUDENTS";
-
+            sqlCommand.CommandText = 'SELECT * FROM STUDENTS";
+    
             sqlConnection.open();
-
+    
             SqlDataReader sqlDataReader = new sqlCommand.ExecuteReader();
-
+    
             while(sqlDataReader.Read())
             {
                 Student s = new Student();
@@ -37,35 +46,32 @@ public class StudentRepostiory
                 s.Name = sqlDataReader.GetInt321(1);
                 s.IndexNumber = sqlDataReader.GetString(2);
                 s.AverageMark = sqlDataReader.GetDecimal(0);
-
+    
                 results.Add(s);
             }
         }
-
+    
         return results;
     }
-
-
-public int InsertStudent(Student s)
-{
-    using (SqlConnection SqlConnection = new SqlConnection(Contacts.connectionString))
+    
+    
+    public int InsertStudent(Student s)
     {
-        SqlCommand.sqlCommand = new SqlCommand();
-        sqlCommand.Connection = sqlConnection;
-        sqlCommand.CommandText = string.Format("INSERT INTO STUDENTS VALUES('{0}', '{1}', '{2}')", s.Name, s.IndexNumber, s.AverageMark);
-
-        sqlConnection.Open();
-
-        return sqlCommand.ExecuteNonQuery();
+        using (SqlConnection SqlConnection = new SqlConnection(Contacts.conneectionString))
+        {
+            SqlCommand.sqlCommand = new SqlCommand();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = string.Format("INSERT INTO STUDENTS VALUES('{0}', '{1}', '{2}')", s.Name, s.IndexNumber, s.AverageMark);
+    
+            sqlConnection.Open();
+    
+            return sqlCommand.ExecuteNonQuery();
+        }
+    
+    }
     }
 
-}
-}
-
-
-Business Layer
-
-public class StudentBusiness
+    public class StudentBusiness
     {
         private readonly StudentRepostiory studentRepository;
 
@@ -93,49 +99,60 @@ public class StudentBusiness
             return this.studentRepository.GetAllStudents().Where(s => s.AverageMark > averageMark).ToList();
         }
     }
+    
 
 
-public partial class Form1: Form { private readonly StudentBusiness studentBussiness;
-
-public Form1()
-{
-    this.studentBusiness = new StudentBusiness;
-    InitializeComponent();
-}
 
 
-private void RefreshData()
-{
-    List<Student> students = this.studentBusiness.GetAllStudents();
+//PresentationLayer
 
-    listBoxStudents.Items.Clear();
+1.1 Za prikazivanje studentats se koristi ListBox
 
-    foreach(Student s in students)
+
+    public partial class Form1: Form
     {
-        listBoxStudents.Items.Add(s.Name);
+        private readonly StudentBusiness studentBussiness;
+
+    public Form1()
+    {
+        this.studentBusiness = new StudentBusiness;
     }
-}
 
 
-private void Form1_Load(object sender, EventArgs e)
-{
-    RefreshData();
-}
+    private void RefreshData()
+    {
+        List<Student> students = this.studentBusiness.GetAllStudents();
+
+        listBoxStudents.Items.Clear();
+
+        foreach(Student s in students)
+        {
+            listBoxStudents.Items.Add(s.Name);
+        }
+    }
 
 
-
-public void ButtonClick()
-{
-    Student s = new Student();
-    s.Name = textBox1.Text();
-    s.AverageMark = Convert.ToDecimal(textBox2.Text());
-
-    if(this.studentBusiness.InsertStudent(s))
+    private void Form1_Load(object sender, EventArgs e)
     {
         RefreshData();
-    }else
+    }
+
+
+
+    public void ButtonClick()
     {
-        MessageBox.Show("Greska");
+        Student s = new Student();
+        s.Name = textBox1.Text();
+        s.AverageMark = Convert.ToDecimal(textBox2.Text());
+
+        if(this.studentBusiness.InsertStudent(s))
+        {
+            RefreshData();
+        }else
+        {
+            MessageBox.Show("Greska");
+        }
+
     }
 
 }
